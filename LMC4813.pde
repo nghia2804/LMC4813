@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /**
  * LMC 4813 Final Project
  * 
@@ -137,8 +137,7 @@ void keyPressed() {
 void mouseClicked() {
    println("mouse clicked!");
    makey.redrawClickBtn(color(0, 255, 0));
-
-
+}
 
 void stop() {
 

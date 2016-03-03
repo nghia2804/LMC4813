@@ -7,50 +7,51 @@
  * 
  */
  
+MakeyMakey makey = new MakeyMakey(10, 10, 512);
+ 
 void setup () {
   size(720, 340);
+  
+  
 }
 
 void draw () {
-  createMakey(100, 10, 256);
+  makey.drawMakey();
 }
 
+
+
+
 void keyPressed () {
-   
+  
+  if (key == ' ') {
+    println("spacebar pressed!");
+    makey.redrawSpaceBtn(color(0, 255, 0));
+  } else if (key == CODED) {
+    switch (keyCode) {
+      case UP:
+        println("keyCode " + keyCode + " pressed!");
+        makey.redrawUpBtn(color(0, 255, 0));
+        break;
+      case DOWN:
+        println("keyCode " + keyCode + " pressed!");
+        makey.redrawDownBtn(color(0, 255, 0));
+        break;
+      case LEFT:
+        println("keyCode " + keyCode + " pressed!");
+        makey.redrawLeftBtn(color(0, 255, 0));
+        break;
+      case RIGHT:
+        println("keyCode " + keyCode + " pressed!");
+        makey.redrawRightBtn(color(0, 255, 0));
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 void mouseClicked() {
-   
-}
-
-/**
- * draws a MakeyMakey on the canvas
- * 
- * @param xPos the x position of the MakeyMakey
- * @param yPos the y position of the MakeyMakey
- * @param w the width of the MakeyMakey
- */
-void createMakey (int x, int y, int w) {
-  int h = w / 2;  // the MakeyMakey has a 2:1 width:height ratio
-  
-  // MakeyMakey colors!
-  color makeyWhite, makeyRed, makeySilver;
-  makeyWhite = color(254, 254, 254);
-  makeyRed = color(255, 38, 0);
-  makeySilver = color(192, 191, 190);
-  
-  // draws the white rectangle
-  fill(makeyWhite);
-  stroke(makeyWhite);
-  rect(x, y, w, h);
-  
-  // draws the red parts of the MakeyMakey
-  fill(makeyRed);
-  stroke(makeyRed);
-  rect(x, (y + (5.0 * h) / 6), w, h / 5.7); // red stripe on bottom
-  rect((x + 0.22 * w), (y + 0.06 * h), (0.10 * w), (0.667 * h)); // vertical line of d-pad
-  rect((x + 0.105 * w), (y + 0.30 * h), (0.667 * h), (0.10 * w)); // horizontal line of d-pad
-  ellipseMode(CORNER);
-  ellipse((x + 0.53 * w), (y + 0.22 * h), (0.375 * h), (0.375 * h)); // first circular button 
-  ellipse((x + 0.75 * w), (y + 0.22 * h), (0.375 * h), (0.375 * h)); // second circular buttom
+   println("mouse clicked!");
+   makey.redrawClickBtn(color(0, 255, 0));
 }

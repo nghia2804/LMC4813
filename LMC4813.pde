@@ -53,15 +53,4 @@ void createMakey (int x, int y, int w) {
   ellipseMode(CORNER);
   ellipse((x + 0.53 * w), (y + 0.22 * h), (0.375 * h), (0.375 * h)); // first circular button 
   ellipse((x + 0.75 * w), (y + 0.22 * h), (0.375 * h), (0.375 * h)); // second circular buttom
-  
-  //// draws the silver parts of the MakeyMakey
-  //fill(makeySilver);
-  //stroke(makeySilver);
-  //rect((x + 0.02 * w), (y + 0.89 * h), (0.959 * w), (0.12 * h)); // the ground bar on the bottom of the Makey
-  //ellipse((x + 0.53 * w + 0.062 * h), (y + 0.282 * h), (0.25 * h), (0.25 * h)); // first circular button 
-  //ellipse((x + 0.75 * w + 0.062 * h), (y + 0.282 * h), (0.25 * h), (0.25 * h)); // second circular buttom
-  //rect((x + 0.243 * w), (y + 0.06 * h + 0.0288 * w), (0.10 * w) / 2, (0.20 * h)); // d-pad up
-  //rect((x + 0.305 * w), (y + 0.35 * h), (0.20 * h), (0.10 * w) / 2); // d-pad right
-  //rect((x + 0.243 * w), (y + 0.43 * h + 0.0288 * w), (0.10 * w) / 2, (0.20 * h)); // d-pad down
-  //rect((x + 0.132 * w), (y + 0.35 * h), (0.20 * h), (0.10 * w) / 2); // d-pad left
 }

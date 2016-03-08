@@ -35,7 +35,7 @@ Rhythm r;
 GraphicViz viz;
 
 //Makeymakey variables--------
-MakeyMakey makey = new MakeyMakey(10, 10, 512);
+MakeyMakey makey = new MakeyMakey(50, 400, 256);
 
 void setup() {  
   size(800, 800);
@@ -44,7 +44,7 @@ void setup() {
   time = 0;
   
   //Initialize rhythm with tempo (beats/minute)
-  r = new Rhythm(100);
+  r = new Rhythm(60);
   
   //
   viz = new GraphicViz(60,400);
@@ -64,13 +64,12 @@ void setup() {
     //
     drumstruck[i] = false;
   }
+  r.initializeRhythm();
+  r.drawRhythm();
 }
 
 void draw() {
-  background(255);
-  
-  // Makeymakey draw
-  makey.drawMakey();
+  background(200);
   
   
   // draw the drums: if a draw has just been struck
@@ -78,6 +77,9 @@ void draw() {
   viz.drawMark(time);
   viz.drawGid();
   viz.drawViz(drumstruck, time);
+  
+  // Makeymakey draw
+  makey.drawMakey();
   
   
   time++;
@@ -97,28 +99,12 @@ void keyPressed() {
         makey.redrawUpBtn(color(0, 255, 0));
         drumstruck[0] = true;
         drumAudio[0].play(0);
-        if (r.isStruckRight(time)){
-          //fill green
-          fill(0,255,0);
-        } else {
-          //fill red
-          fill(255,0,0);
-        }
-        ellipse(200, 250, 350, 350);
         break;
       case DOWN:
         println("keyCode " + keyCode + " pressed!");
         makey.redrawDownBtn(color(0, 255, 0));
         drumstruck[1] = true;
         drumAudio[1].play(0);
-        if (r.isStruckRight(time)){
-          //fill green
-          fill(0,255,0);
-        } else {
-          //fill red
-          fill(255,0,0);
-        }
-        ellipse(600, 250, 350, 350);
         break;
       case LEFT:
         println("keyCode " + keyCode + " pressed!");

@@ -10,7 +10,12 @@
  
 // import Minim
 import ddf.minim.*;
-Minim minim;
+import ddf.minim.analysis.*;
+import ddf.minim.analysis.*;
+
+Minim minim = new Minim(this);
+AudioPlayer song;
+BeatDetect b;
 
 //Timer
 int time;
@@ -35,13 +40,18 @@ Rhythm r;
 GraphicViz viz;
 
 //Makeymakey variables--------
-MakeyMakey makey = new MakeyMakey(50, 400, 256);
+MakeyMakey makey = new MakeyMakey(200, 350, 400);  
 
 void setup() {  
-  size(800, 800);
+  size(800, 600);
   smooth();
   
   time = 0;
+  
+  song = minim.loadFile("80 BPM - Simple Straight Beat - Drum Track.mp3", 2048);
+  song.play();
+  // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
+  b = new BeatDetect();
   
   //Initialize rhythm with tempo (beats/minute)
   r = new Rhythm(60);
@@ -80,6 +90,20 @@ void draw() {
   
   // Makeymakey draw
   makey.drawMakey();
+  
+  b.detect(song.mix);
+  
+  strokeWeight(32);
+  if (b.isOnset()) {
+    stroke(#000000);
+  } else {
+    stroke(#FFFFFF);
+  }
+  line(0, 0, width, 0);
+  line(0, 0, 0, height);
+  line(width, 0, width, height);
+  line(0, height, width, height);
+  strokeWeight(1);
   
   
   time++;

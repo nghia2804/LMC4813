@@ -39,8 +39,8 @@ class Rhythm{
     meta = player.getMetaData();
     beat = new BeatDetect(player.bufferSize(), player.sampleRate());
     beat.setSensitivity(100);
-    player.loop();
-    player.play();
+    //player.loop();
+    //player.play();
     bl = new BeatListener(beat, player);   //feature inside minim to detect beat
   }
   

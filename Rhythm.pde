@@ -6,12 +6,11 @@ import ddf.minim.ugens.*;
 import ddf.minim.effects.*;
 
 
-
+Minim minim2 = new Minim(this);
 AudioPlayer player;
 AudioMetaData meta;
 BeatDetect beat;
 BeatListener bl; //Initiate beatListener for minim to detect the beats
-PFont f; // Font for kick 
 
 
 class Rhythm{
@@ -49,6 +48,7 @@ class Rhythm{
     int bsize = player.bufferSize();  //define buffersize as an integer
     if (beat.isKick()){
       println("Kick");
+      
     ////Displaying word.   
     //int kickSize = 60;
     //float x1 = (100)*cos(28*PI/bsize);

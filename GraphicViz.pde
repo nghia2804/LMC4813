@@ -1,3 +1,6 @@
+color[] colorArray = new color[6];
+PFont f;
+
 class GraphicViz{
   int vizLen;
   int numberOfBars = 11;
@@ -7,7 +10,7 @@ class GraphicViz{
   int leftAlign;
   int topAlign;
   float period;
-  int drumSize = 150;
+  int drumSize = 100;
   int drumSpace;
   int Switch = 0;
   
@@ -15,6 +18,10 @@ class GraphicViz{
   int diameter = 20;
   float positionX;
   float speed;
+  
+  //drum variables
+  int drumTopAlign;
+  int animationCount = 0;
   
   GraphicViz(int tempo, int vizLen){
     this.tempo = tempo;
@@ -24,8 +31,21 @@ class GraphicViz{
     this.topAlign = height / 10;
     this.positionX = leftAlign + diameter/2;
     this.speed = (vizLen*numberOfBars - diameter)/period;
+    this.drumTopAlign = height * 2/ 4;
     
   }
+  
+  void initializeViz(){
+    // Initialize colors
+    colorArray[0] = color(236,105,118);
+    colorArray[1] = color(193,213,97);
+    colorArray[2] = color(239,135,182);
+    colorArray[3] = color(150,214,247);
+    colorArray[4] = color(191,135,186);
+    colorArray[5] = color(249,242,164);
+    f = createFont("Arial",16,true);
+  }
+  
   void drawGid(){
     for (int i = 1; i <= numberOfBars; i++) {
       if ( Math.abs(i-strikeMark)<=2){
@@ -56,26 +76,31 @@ class GraphicViz{
   ellipse(positionX,topAlign-vizLen/2-diameter/2,diameter,diameter);    
   }
   
-  void drawViz(boolean[] drumstruck, int time){
-    int len = drumstruck.length;
-    int drumTopAlign = height * 1/ 4;
-    
+  void drawViz(Instrument[] drumset, int time){
+    int len = drumset.length;
+    textFont(f,32);                  // STEP 3 Specify font to be used
+    fill(0);                         // STEP 4 Specify font color 
+    text("Point: " + point,600,50);
+  
     //Calcualte the space between drums
     drumSpace = (width - len*drumSize)/(len+1);
     
     for (int i = 0; i < len; i++){
         // drum i
-      if (drumstruck[0] == true) {
-        fill(0);
-        drumstruck[0] = false;
+      if (drumset[i].isStruck == true) {
+        animationCount = animationCount+2;
+        fill(colorArray[i]);
+        noStroke();
+        ellipse((drumSpace*(i+1)+drumSize*(i)), drumTopAlign, drumSize+animationCount, drumSize+animationCount);
+        if (animationCount == 14){
+          drumset[i].isStruck = false;
+          animationCount = 0;
+        }
       } else {
-        fill(255);
+        fill(colorArray[i]);
+        noStroke();
+        ellipse((drumSpace*(i+1)+drumSize*(i)), drumTopAlign, drumSize, drumSize);
       }
-      fill(50);
-      stroke(50);
-      ellipse((drumSpace*(i+1)+drumSize*(i)), drumTopAlign, drumSize, drumSize);
     }
-    
   }
-  
 }

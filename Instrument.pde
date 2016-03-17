@@ -5,10 +5,13 @@ class Instrument{
   String culture;
   String discription;
   String soundLocation;
+  Boolean isStruck;
+  AudioSnippet drumAudio;
 
   Instrument(String name, String soundLocation){
     this.name = name;
     this.soundLocation = soundLocation;
+    this.isStruck = false;
 
   }  
   void setCulture(String culture){
@@ -17,6 +20,10 @@ class Instrument{
   
   void setDiscription(String discription){
     this.discription = discription;
+  }
+  
+  void setAudio(){
+    this.drumAudio = minim.loadSnippet(this.soundLocation);
   }
   
   String getCulture(){
@@ -29,6 +36,10 @@ class Instrument{
   
   String getsoundLocation(){
     return this.soundLocation;
+  }
+  
+  Boolean isStruck(){
+    return isStruck;
   }
   
   

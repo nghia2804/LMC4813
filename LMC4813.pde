@@ -128,6 +128,7 @@ void keyPressed() {
       isSongMute= true;
     } else { 
       song.unmute();
+      isSongMute = false;
     }
       
   } else if (key == CODED) {

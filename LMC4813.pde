@@ -22,11 +22,16 @@ BeatDetect b;
 int time;
 
 //sound variables-------------
-
-int numberOfInstrument = 4;
+public static final int MAX_INSTRUMENTS = 6;
+int numberOfInstruments = MAX_INSTRUMENTS;
+String[] africanInstruments = {"axatse", "balaphone", "bougarabou", "caxixi", "djembe",
+"djun-djun", "embaire", "ewe-drum", "gankogui", "sabar-drum", "slit-drum", "talking-drum",
+"udu-drum"};
+String[] indianInstruments = {"dafli-drum", "dholak-drum", "ghatam-drum", "jaltarang",
+"kanjira", "khartal", "morsing", "tabla"};
 
 //Array of Instruments
-Instrument[] drumset = new Instrument[numberOfInstrument];
+Instrument[] drumset = new Instrument[numberOfInstruments];
 
 // rhythm variables-----------
 Rhythm r;
@@ -42,10 +47,13 @@ MakeyMakey makey = new MakeyMakey(50, 500, 100);
 // Point
 int point = 0;
 int beatMillis = 0;
+Boolean isBgDrawn = false;
 
 void setup() {  
   size(800, 600);
   smooth();
+  
+  
   
   
   time = 0;
@@ -65,15 +73,21 @@ void setup() {
   
   // ...
   minim = new Minim(this);
+  
+  PImage africaBackground = loadImage("img/africa/bg-img-africa.jpg");
+  image(africaBackground, 0, 0, width, height);
 
   //Initialize Instruments
-  drumset[0] = new Instrument("Drum1", "SoundSamples/kick1.wav");
-  drumset[1] = new Instrument("Drum2", "SoundSamples/snare2.wav");
-  drumset[2] = new Instrument("Drum1", "SoundSamples/hat3.wav");
-  drumset[3] = new Instrument("Drum2", "SoundSamples/rim4.wav");
+  for (int i = 0; i < numberOfInstruments; i++) {
+    int pick = (int)Math.floor(Math.random() * africanInstruments.length);
+    String instrument = africanInstruments[pick];
+    drumset[i] = new Instrument(instrument, "img/africa/" + instrument + ".png", "SoundSamples/kick1.wav");
+  }
+  
+  
 
   //Initialize Instrument Audio & Graphics
-  for (int i = 0; i < numberOfInstrument; i++) {
+  for (int i = 0; i < numberOfInstruments; i++) {
     //initialize sound
     drumset[i].setAudio();
 
@@ -83,8 +97,11 @@ void setup() {
 }
 
 void draw() {
-  background(121,148,177);
-  
+
+  color dirt = color(218, 162, 113);
+  fill(dirt);
+  stroke(dirt);
+  rect(0, height - 200, width, 200);
   
   // draw the drums: if a draw has just been struck
   // then fill it with color as visual feedback for the user
@@ -180,7 +197,7 @@ void mouseClicked() {
 
 void stop() {
 
-  for (int i = 0; i < numberOfInstrument; i++) {
+  for (int i = 0; i < numberOfInstruments; i++) {
     drumset[i].drumAudio.close();
   }
   minim.stop();

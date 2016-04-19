@@ -31,7 +31,7 @@ class GraphicViz{
     this.topAlign = height / 10;
     this.positionX = leftAlign + diameter/2;
     this.speed = (vizLen*numberOfBars - diameter)/period;
-    this.drumTopAlign = height * 2/ 4;
+    this.drumTopAlign = height - drumSize * 2 + 50;
     
   }
   
@@ -87,6 +87,8 @@ class GraphicViz{
     
     for (int i = 0; i < len; i++){
         // drum i
+      ((Instrument)drumset[i]).drawInstrument(i * drumSize + drumSpace*(i+1), drumTopAlign - (drumSize + 30), drumSize, drumSize);
+        
       if (drumset[i].isStruck == true) {
         animationCount = animationCount+2;
         fill(colorArray[i]);

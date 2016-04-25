@@ -47,7 +47,6 @@ class Rhythm{
     beat.detect(player.mix);
     int bsize = player.bufferSize();  //define buffersize as an integer
     if (beat.isKick()){
-      println("Kick");
       
     ////Displaying word.   
     //int kickSize = 60;

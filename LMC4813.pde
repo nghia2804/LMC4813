@@ -53,6 +53,7 @@ boolean canDrawBg;
 PImage titleScreen;
 PImage worldMapAfrica;
 PImage worldMapIndia;
+PImage levelSetupBg;
 
 // Helper vars
 String selectedCulture;
@@ -72,7 +73,7 @@ void setup() {
   time = 0;
   
   titleSong = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
-  titleSong.play();
+  titleSong.loop();
   
   // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
   b = new BeatDetect();
@@ -123,12 +124,19 @@ void draw() {
     break; // end start state 
     case 1: // worldmap state
       titleSong.play();
+      
       if (selectedCulture == "india") {
-        worldMapIndia = loadImage("img/world-map-sel-india.jpg");
-        image(worldMapIndia, 0, 0, width, height);
+        if (canDrawBg) {
+          worldMapIndia = loadImage("img/world-map-sel-india.jpg");
+          image(worldMapIndia, 0, 0, width, height);
+          canDrawBg = false;
+        }
       } else {
-        worldMapAfrica = loadImage("img/world-map-sel-africa.jpg");
-        image(worldMapAfrica, 0, 0, width, height);
+        if (canDrawBg) {
+          worldMapAfrica = loadImage("img/world-map-sel-africa.jpg");
+          image(worldMapAfrica, 0, 0, width, height);
+          canDrawBg = false;
+        }
       }
       
       
@@ -136,10 +144,13 @@ void draw() {
     case 2: // level setup state
       titleSong.play();
       
+      if (canDrawBg) {
+        
+      }
       
     break; // end level setup state
     
-    case 3: // level state
+    case 3: // africa level state
       titleSong.pause();
     
       PImage africaBackground = loadImage("img/africa/bg-img-africa.jpg");
@@ -177,7 +188,7 @@ void draw() {
       
       time++;
       
-    break; // end level state
+    break; // end africa level state
     
     default:
     break;
@@ -200,6 +211,7 @@ void keyPressed() {
       } else if (key == ENTER) {
         gameState = fsm.nextState();
         canDrawBg = true;
+        selectedCulture = "africa";
       } else if (key == CODED) {
         switch (keyCode) {
           case UP:
@@ -224,6 +236,13 @@ void keyPressed() {
     
           if (key == ' ') {
         
+          } else if (key == ENTER) {
+            println(selectedCulture + " was selected");
+            gameState = fsm.nextState();
+            canDrawBg = true;
+          } else if (key == BACKSPACE) {
+            gameState = fsm.prevState();
+            canDrawBg = true;
           } else if (key == CODED) {
             switch (keyCode) {
               case UP:
@@ -270,7 +289,7 @@ void keyPressed() {
           }
     
     break; // end level setup state
-    case 3: // level state
+    case 3: // africa level state
     
           if (key == ' ') {
         
@@ -314,7 +333,7 @@ void keyPressed() {
             }
           }
     
-    break; // end level state
+    break; // end africa level state
     default:
     break;
   }
@@ -341,7 +360,7 @@ void mouseClicked() {
     
     break; // end level setup state
     
-    case 3: // level state
+    case 3: // africa level state
       makey.redrawClickBtn(color(0, 255, 0));
     break;
     default:

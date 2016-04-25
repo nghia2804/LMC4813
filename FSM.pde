@@ -10,27 +10,28 @@ public class FSM {
   private GameState startState;
   private GameState worldMapState;
   private GameState levelSetupState;
-  private GameState levelState;
+  private GameState africaLevelState;
+  private GameState indiaLevelState;
   private GameState currentState;
   
   public FSM() {
     this.startState = new GameState("start", 0);
     this.worldMapState = new GameState("worldmap", 1);
     this.levelSetupState = new GameState("levelsetup", 2);
-    this.levelState = new GameState("level", 3);
+    this.africaLevelState = new GameState("level", 3);
     this.currentState = this.startState;
     
     this.startState.setNext(worldMapState);
-    this.startState.setPrev(null);
+    this.startState.setPrev(startState);
     
     this.worldMapState.setNext(levelSetupState);
     this.worldMapState.setPrev(startState);
     
-    this.levelSetupState.setNext(levelState);
+    this.levelSetupState.setNext(africaLevelState);
     this.levelSetupState.setPrev(worldMapState);
     
-    this.levelState.setNext(worldMapState);
-    this.levelState.setPrev(levelSetupState);
+    this.africaLevelState.setNext(worldMapState);
+    this.africaLevelState.setPrev(levelSetupState);
   }
   
   public GameState currentState() {

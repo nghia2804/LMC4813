@@ -54,9 +54,6 @@ void setup() {
   size(800, 600);
   smooth();
   
-  
-  
-  
   time = 0;
   
   song = minim.loadFile("80 BPM - Simple Straight Beat - Drum Track.mp3", 2048);
@@ -120,7 +117,6 @@ void draw() {
   if (b.isOnset()) {
     stroke(#000000);
     beatMillis = millis();
-    println(beatMillis);
   } else {
     stroke(#FFFFFF);
   }

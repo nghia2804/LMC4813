@@ -1,4 +1,11 @@
 
+/**
+ * A MakeyMakey widget that displays live button/key presses
+ *
+ * @author Edwin Choate
+ * @version 1.0
+ */ 
+ 
 class MakeyMakey {
 
   int xPosition, yPosition, screenWidth, screenHeight;

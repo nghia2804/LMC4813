@@ -37,12 +37,16 @@ public class FSM {
     return this.currentState; 
   }
   
-  public void nextState() {
-    this.currentState = this.currentState.getNext(); 
+  public GameState nextState() {
+    this.currentState = this.currentState.getNext();
+    println("moved to " + this.currentState);
+    return this.currentState;
   }
   
-  public void prevState() {
+  public GameState prevState() {
     this.currentState = this.currentState.getPrev(); 
+    println("moved to " + this.currentState);
+    return this.currentState;
   }
   
   

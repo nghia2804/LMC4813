@@ -57,6 +57,9 @@ void setup() {
   size(800, 600);
   smooth();
   
+  PImage titleScreen = loadImage("img/title-screen.jpg");
+  image(titleScreen, 0, 0, width, height);
+  
   time = 0;
   
   //song = minim.loadFile("80 BPM - Simple Straight Beat - Drum Track.mp3", 2048);
@@ -100,10 +103,10 @@ void draw() {
 
   switch (gameState.getVal()) {
     case 0: // start state
-    
+      
     break; // end start state 
     case 1: // worldmap state
-    
+      
     break; // end worldmap state
     case 2: // level setup state
     
@@ -160,11 +163,14 @@ void draw() {
 
 void keyPressed() {
   
+  
   switch (gameState.getVal()) {
     case 0: // start state
     
       if (key == ' ') {
         
+      } else if (key == ENTER) {
+        gameState = fsm.nextState();
       } else if (key == CODED) {
         switch (keyCode) {
           case UP:

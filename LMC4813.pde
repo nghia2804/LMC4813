@@ -16,6 +16,7 @@ import ddf.minim.analysis.*;
 
 Minim minim = new Minim(this);
 AudioPlayer song;
+AudioPlayer titleSong;
 Boolean isSongMute = false;
 BeatDetect b;
 
@@ -47,6 +48,14 @@ MakeyMakey makey = new MakeyMakey(50, 500, 100);
 FSM fsm = new FSM();
 GameState gameState = fsm.currentState();
 
+boolean canDrawBg;
+
+PImage titleScreen;
+PImage worldMapAfrica;
+PImage worldMapIndia;
+
+// Helper vars
+String selectedCulture;
 
 // Point
 int point = 0;
@@ -57,13 +66,13 @@ void setup() {
   size(800, 600);
   smooth();
   
-  PImage titleScreen = loadImage("img/title-screen.jpg");
-  image(titleScreen, 0, 0, width, height);
+  canDrawBg = true;
+  
   
   time = 0;
   
-  //song = minim.loadFile("80 BPM - Simple Straight Beat - Drum Track.mp3", 2048);
-  //song.play();
+  titleSong = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
+  titleSong.play();
   
   // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
   b = new BeatDetect();
@@ -103,16 +112,35 @@ void draw() {
 
   switch (gameState.getVal()) {
     case 0: // start state
+      titleSong.play();
+      
+      if (canDrawBg) {
+        titleScreen = loadImage("img/title-screen.jpg");
+        image(titleScreen, 0, 0, width, height);
+        canDrawBg = false;
+      }
       
     break; // end start state 
     case 1: // worldmap state
+      titleSong.play();
+      if (selectedCulture == "india") {
+        worldMapIndia = loadImage("img/world-map-sel-india.jpg");
+        image(worldMapIndia, 0, 0, width, height);
+      } else {
+        worldMapAfrica = loadImage("img/world-map-sel-africa.jpg");
+        image(worldMapAfrica, 0, 0, width, height);
+      }
+      
       
     break; // end worldmap state
     case 2: // level setup state
-    
+      titleSong.play();
+      
+      
     break; // end level setup state
     
     case 3: // level state
+      titleSong.pause();
     
       PImage africaBackground = loadImage("img/africa/bg-img-africa.jpg");
       image(africaBackground, 0, 0, width, height);
@@ -171,6 +199,7 @@ void keyPressed() {
         
       } else if (key == ENTER) {
         gameState = fsm.nextState();
+        canDrawBg = true;
       } else if (key == CODED) {
         switch (keyCode) {
           case UP:
@@ -204,10 +233,12 @@ void keyPressed() {
               
               break;
               case LEFT:
-              
+                selectedCulture = "africa";
+                canDrawBg = true;
               break;
               case RIGHT:
-              
+                selectedCulture = "india";
+                canDrawBg = true;
               break;
               default:
               break;

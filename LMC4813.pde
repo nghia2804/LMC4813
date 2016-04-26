@@ -50,10 +50,12 @@ GameState gameState = fsm.currentState();
 
 boolean canDrawBg;
 
+// Background images
 PImage titleScreen;
 PImage worldMapAfrica;
 PImage worldMapIndia;
 PImage levelSetupBg;
+PImage numOne, numTwo, numThree, numFour, numFive, numSix;
 
 // Helper vars
 String selectedCulture;
@@ -145,7 +147,9 @@ void draw() {
       titleSong.play();
       
       if (canDrawBg) {
-        
+        levelSetupBg = loadImage("img/level-setup-screen.jpg");
+        image(levelSetupBg, 0, 0, width, height);
+        canDrawBg = false;
       }
       
     break; // end level setup state
@@ -269,6 +273,9 @@ void keyPressed() {
     
           if (key == ' ') {
             
+          } else if (key == BACKSPACE) {
+            gameState = fsm.prevState();
+            canDrawBg = true;
           } else if (key == CODED) {
             switch (keyCode) {
               case UP:

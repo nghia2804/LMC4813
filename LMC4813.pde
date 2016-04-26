@@ -15,9 +15,9 @@ import ddf.minim.analysis.*;
 import ddf.minim.analysis.*;
 
 Minim minim = new Minim(this);
-AudioPlayer song;
+AudioPlayer africaBgMusic;
 AudioPlayer titleSong;
-Boolean isSongMute = false;
+Boolean isAfricaSongMute = false;
 BeatDetect b;
 
 //Timer
@@ -33,7 +33,7 @@ String[] indianInstruments = {"dafli-drum", "dholak-drum", "ghatam-drum", "jalta
 "kanjira", "khartal", "morsing", "tabla"};
 
 //Array of Instruments
-Instrument[] drumset = new Instrument[numberOfInstruments];
+Instrument[] drumset;
 
 // rhythm variables-----------
 Rhythm r;
@@ -60,6 +60,7 @@ PImage worldMapAfrica;
 PImage worldMapIndia;
 PImage levelSetupBg;
 PImage numOne, numTwo, numThree, numFour, numFive, numSix;
+PImage africaBackground;
 
 color bgBlue = color(171, 245, 254);
 
@@ -83,38 +84,10 @@ void setup() {
   titleSong = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
   titleSong.loop();
   
-  // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
-  b = new BeatDetect();
-  
-  //Initialize rhythm with tempo (beats/minute)
-  r = new Rhythm(60);
-  
-  //
-  viz = new GraphicViz(60,400);
-  viz.initializeViz();
+  africaBgMusic = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
   
   // ...
   minim = new Minim(this);
-  
-  
-
-  //Initialize Instruments
-  for (int i = 0; i < numberOfInstruments; i++) {
-    int pick = (int)Math.floor(Math.random() * africanInstruments.length);
-    String instrument = africanInstruments[pick];
-    drumset[i] = new Instrument(instrument, "img/africa/" + instrument + ".png", "SoundSamples/kick1.wav");
-  }
-  
-  
-
-  //Initialize Instrument Audio & Graphics
-  for (int i = 0; i < numberOfInstruments; i++) {
-    //initialize sound
-    drumset[i].setAudio();
-
-  }
-  r.initializeRhythm();
-  r.drawRhythm();
 }
 
 void draw() {
@@ -230,8 +203,11 @@ void draw() {
     case 3: // africa level state
       titleSong.pause();
     
-      PImage africaBackground = loadImage("img/africa/bg-img-africa.jpg");
-      image(africaBackground, 0, 0, width, height);
+      if (canDrawBg) {
+        africaBackground = loadImage("img/africa/bg-img-africa.jpg");
+        image(africaBackground, 0, 0, width, height);
+        canDrawBg = false;
+      }
       color dirt = color(218, 162, 113);
       fill(dirt);
       stroke(dirt);
@@ -276,6 +252,40 @@ void draw() {
 }
 
   
+void setupAfricaLevel(int drumCount) {
+  
+  drumset = new Instrument[drumCount];
+  
+  // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
+  b = new BeatDetect();
+  
+  //Initialize rhythm with tempo (beats/minute)
+  r = new Rhythm(60);
+  
+  //
+  viz = new GraphicViz(60,400);
+  viz.initializeViz();
+
+  //Initialize Instruments
+  for (int i = 0; i < drumCount; i++) {
+    int pick = (int)Math.floor(Math.random() * africanInstruments.length);
+    String instrument = africanInstruments[pick];
+    drumset[i] = new Instrument(instrument, "img/africa/" + instrument + ".png", "SoundSamples/kick1.wav");
+  }
+  
+  
+
+  //Initialize Instrument Audio & Graphics
+  for (int i = 0; i < drumCount; i++) {
+    //initialize sound
+    drumset[i].setAudio();
+
+  }
+  r.initializeRhythm();
+  r.drawRhythm(); 
+  
+}
+
 
 void keyPressed() {
   
@@ -289,6 +299,7 @@ void keyPressed() {
         gameState = fsm.nextState();
         canDrawBg = true;
         selectedCulture = "africa";
+        africaBgMusic.play();
       } else if (key == CODED) {
         switch (keyCode) {
           case UP:
@@ -354,6 +365,9 @@ void keyPressed() {
             if (numberOfInstruments >= 1 && numberOfInstruments <= 6) {
               gameState = fsm.nextState();
               canDrawBg = true;
+              
+              setupAfricaLevel(numberOfInstruments);
+              
             }
             
           } else if (key == CODED) {
@@ -390,12 +404,12 @@ void keyPressed() {
           if (key == ' ') {
         
             makey.redrawSpaceBtn(color(0, 255, 0));
-            if (isSongMute == false){ 
-              song.mute();
-              isSongMute= true;
+            if (isAfricaSongMute == false){ 
+              africaBgMusic.mute();
+              isAfricaSongMute= true;
             } else { 
-              song.unmute();
-              isSongMute = false;
+              africaBgMusic.unmute();
+              isAfricaSongMute = false;
             }
             
           } else if (key == CODED) {
@@ -407,22 +421,28 @@ void keyPressed() {
                 getPoint();
               break;
               case DOWN:
-                makey.redrawDownBtn(color(0, 255, 0));
-                drumset[1].isStruck = true;
-                drumset[1].drumAudio.play(0);
-                getPoint();
+                if (numberOfInstruments >= 2) {
+                  makey.redrawDownBtn(color(0, 255, 0));
+                  drumset[1].isStruck = true;
+                  drumset[1].drumAudio.play(0);
+                  getPoint();
+                }
               break;
               case LEFT:
-                makey.redrawLeftBtn(color(0, 255, 0));
-                drumset[2].isStruck = true;
-                drumset[2].drumAudio.play(0);
-                getPoint();
+                if (numberOfInstruments >= 3) {
+                  makey.redrawLeftBtn(color(0, 255, 0));
+                  drumset[2].isStruck = true;
+                  drumset[2].drumAudio.play(0);
+                  getPoint();
+                }
               break;
               case RIGHT:
-                makey.redrawRightBtn(color(0, 255, 0));
-                drumset[3].isStruck = true;
-                drumset[3].drumAudio.play(0);
-                getPoint();
+                if (numberOfInstruments >= 4) {
+                  makey.redrawRightBtn(color(0, 255, 0));
+                  drumset[3].isStruck = true;
+                  drumset[3].drumAudio.play(0);
+                  getPoint();
+                }
               break;
               default:
               break;

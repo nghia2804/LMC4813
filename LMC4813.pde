@@ -61,6 +61,7 @@ PImage worldMapIndia;
 PImage levelSetupBg;
 PImage numOne, numTwo, numThree, numFour, numFive, numSix;
 
+color bgBlue = color(171, 245, 254);
 
 // Helper vars
 String selectedCulture;
@@ -158,6 +159,77 @@ void draw() {
       }
       
       setupMakey.drawMakey();
+      
+      color yellow = color(225, 225, 0);
+      
+      if (makeyUpEnabled) {
+        setupMakey.redrawUpBtn(yellow);
+      }
+      
+      if (makeyDownEnabled) {
+        setupMakey.redrawDownBtn(yellow);
+      }
+      
+      if (makeyLeftEnabled) {
+        setupMakey.redrawLeftBtn(yellow); 
+      }
+      
+      if (makeyRightEnabled) {
+        setupMakey.redrawRightBtn(yellow); 
+      }
+      
+      if (makeySpaceEnabled) {
+        setupMakey.redrawSpaceBtn(yellow); 
+      }
+      
+      if (makeyClickEnabled) {
+        setupMakey.redrawClickBtn(yellow);
+      }
+      
+      
+      if (numberOfInstruments >= 1 && numberOfInstruments <= MAX_INSTRUMENTS ) {
+        
+        int x, y, w, h;
+        x = 550;
+        y = 430;
+        w = 64;
+        h = w;
+        
+        fill(bgBlue);
+        stroke(bgBlue);
+        rect(x, y, w, h);
+        
+        switch (numberOfInstruments) {
+
+          case 1:
+            numOne = loadImage("img/number-01.png");
+            image(numOne, x, y, w, h);
+          break;
+          case 2:
+            numTwo = loadImage("img/number-02.png");
+            image(numTwo, x, y, w, h);
+          break;
+          case 3:
+            numThree = loadImage("img/number-03.png");
+            image(numThree, x, y, w, h);
+          break;
+          case 4:
+            numFour = loadImage("img/number-04.png");
+            image(numFour, x, y, w, h);
+          break;
+          case 5:
+            numFive = loadImage("img/number-05.png");
+            image(numFive, x, y, w, h);
+          break;
+          case 6:
+            numSix = loadImage("img/number-06.png");
+            image(numSix, x, y, w, h);
+          break;
+        }
+        
+      } else {
+         
+      }
       
     break; // end level setup state
     
@@ -310,8 +382,6 @@ void keyPressed() {
           for (int i = 0; i < enables.length; i++) {
             numberOfInstruments += ( (enables[i]) ? 1 : 0 );
           }
-          
-          println(numberOfInstruments + " drums enabled");
     
     break; // end level setup state
     case 3: // africa level state
@@ -384,9 +454,9 @@ void mouseClicked() {
     case 2: // level setup state
     
       makeyClickEnabled = !makeyClickEnabled;
-    
+            
       boolean[] enables = { makeyUpEnabled, makeyDownEnabled, makeyLeftEnabled, makeyRightEnabled, 
-            makeySpaceEnabled, makeyClickEnabled };
+            makeySpaceEnabled, makeyClickEnabled };      
             
       numberOfInstruments = 0; // reset drum count
        

@@ -25,7 +25,7 @@ int time;
 
 //sound variables-------------
 public static final int MAX_INSTRUMENTS = 6;
-int numberOfInstruments = MAX_INSTRUMENTS;
+int numberOfInstruments = 0;
 String[] africanInstruments = {"axatse", "balaphone", "bougarabou", "caxixi", "djembe",
 "djun-djun", "embaire", "ewe-drum", "gankogui", "sabar-drum", "slit-drum", "talking-drum",
 "udu-drum"};
@@ -44,6 +44,10 @@ GraphicViz viz;
 //Makeymakey variables--------
 //MakeyMakey(int xPosition, int yPosition, int screenWidth)
 MakeyMakey makey = new MakeyMakey(50, 500, 100);  
+MakeyMakey setupMakey = new MakeyMakey(220, 240, 320);
+
+// Booleans for representing which MakeyMakey buttons are enabled at a given point in time
+boolean makeyUpEnabled, makeyDownEnabled, makeyLeftEnabled, makeyRightEnabled, makeySpaceEnabled, makeyClickEnabled;
 
 FSM fsm = new FSM();
 GameState gameState = fsm.currentState();
@@ -56,6 +60,7 @@ PImage worldMapAfrica;
 PImage worldMapIndia;
 PImage levelSetupBg;
 PImage numOne, numTwo, numThree, numFour, numFive, numSix;
+
 
 // Helper vars
 String selectedCulture;
@@ -151,6 +156,8 @@ void draw() {
         image(levelSetupBg, 0, 0, width, height);
         canDrawBg = false;
       }
+      
+      setupMakey.drawMakey();
       
     break; // end level setup state
     
@@ -272,28 +279,39 @@ void keyPressed() {
     case 2: // level setup state
     
           if (key == ' ') {
-            
+            makeySpaceEnabled = !makeySpaceEnabled;
           } else if (key == BACKSPACE) {
             gameState = fsm.prevState();
             canDrawBg = true;
           } else if (key == CODED) {
             switch (keyCode) {
               case UP:
-              
+                makeyUpEnabled = !makeyUpEnabled;
               break;
               case DOWN:
-              
+                makeyDownEnabled = !makeyDownEnabled;
               break;
               case LEFT:
-              
+                makeyLeftEnabled = !makeyLeftEnabled;
               break;
               case RIGHT:
-              
+                makeyRightEnabled = !makeyRightEnabled;
               break;
               default:
               break;
             }
           }
+          
+          boolean[] enables = { makeyUpEnabled, makeyDownEnabled, makeyLeftEnabled, makeyRightEnabled, 
+            makeySpaceEnabled, makeyClickEnabled };
+            
+          numberOfInstruments = 0; // reset drum count
+           
+          for (int i = 0; i < enables.length; i++) {
+            numberOfInstruments += ( (enables[i]) ? 1 : 0 );
+          }
+          
+          println(numberOfInstruments + " drums enabled");
     
     break; // end level setup state
     case 3: // africa level state
@@ -364,6 +382,17 @@ void mouseClicked() {
     
     break; // end worldmap state
     case 2: // level setup state
+    
+      makeyClickEnabled = !makeyClickEnabled;
+    
+      boolean[] enables = { makeyUpEnabled, makeyDownEnabled, makeyLeftEnabled, makeyRightEnabled, 
+            makeySpaceEnabled, makeyClickEnabled };
+            
+      numberOfInstruments = 0; // reset drum count
+       
+      for (int i = 0; i < enables.length; i++) {
+        numberOfInstruments += ( (enables[i]) ? 1 : 0 );
+      }
     
     break; // end level setup state
     

@@ -185,51 +185,45 @@ void draw() {
       if (makeyClickEnabled) {
         setupMakey.redrawClickBtn(yellow);
       }
+        
+      int x, y, w, h;
+      x = 550;
+      y = 430;
+      w = 64;
+      h = w;
       
+      fill(bgBlue);
+      stroke(bgBlue);
+      rect(x, y, w, h);
       
-      if (numberOfInstruments >= 1 && numberOfInstruments <= MAX_INSTRUMENTS ) {
-        
-        int x, y, w, h;
-        x = 550;
-        y = 430;
-        w = 64;
-        h = w;
-        
-        fill(bgBlue);
-        stroke(bgBlue);
-        rect(x, y, w, h);
-        
-        switch (numberOfInstruments) {
+      switch (numberOfInstruments) {
 
-          case 1:
-            numOne = loadImage("img/number-01.png");
-            image(numOne, x, y, w, h);
-          break;
-          case 2:
-            numTwo = loadImage("img/number-02.png");
-            image(numTwo, x, y, w, h);
-          break;
-          case 3:
-            numThree = loadImage("img/number-03.png");
-            image(numThree, x, y, w, h);
-          break;
-          case 4:
-            numFour = loadImage("img/number-04.png");
-            image(numFour, x, y, w, h);
-          break;
-          case 5:
-            numFive = loadImage("img/number-05.png");
-            image(numFive, x, y, w, h);
-          break;
-          case 6:
-            numSix = loadImage("img/number-06.png");
-            image(numSix, x, y, w, h);
-          break;
-        }
-        
-      } else {
-         
+        case 1:
+          numOne = loadImage("img/number-01.png");
+          image(numOne, x, y, w, h);
+        break;
+        case 2:
+          numTwo = loadImage("img/number-02.png");
+          image(numTwo, x, y, w, h);
+        break;
+        case 3:
+          numThree = loadImage("img/number-03.png");
+          image(numThree, x, y, w, h);
+        break;
+        case 4:
+          numFour = loadImage("img/number-04.png");
+          image(numFour, x, y, w, h);
+        break;
+        case 5:
+          numFive = loadImage("img/number-05.png");
+          image(numFive, x, y, w, h);
+        break;
+        case 6:
+          numSix = loadImage("img/number-06.png");
+          image(numSix, x, y, w, h);
+        break;
       }
+    
       
     break; // end level setup state
     

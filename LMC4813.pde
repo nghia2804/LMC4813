@@ -247,7 +247,7 @@ void draw() {
       // Makeymakey draw
       makey.drawMakey();
       
-      b.detect(song.mix);
+      //b.detect(song.mix);
       
       strokeWeight(32);
       if (b.isOnset()) {
@@ -349,6 +349,13 @@ void keyPressed() {
           } else if (key == BACKSPACE) {
             gameState = fsm.prevState();
             canDrawBg = true;
+          } else if (key == ENTER) {
+            
+            if (numberOfInstruments >= 1 && numberOfInstruments <= 6) {
+              gameState = fsm.nextState();
+              canDrawBg = true;
+            }
+            
           } else if (key == CODED) {
             switch (keyCode) {
               case UP:

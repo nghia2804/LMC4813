@@ -204,7 +204,7 @@ void draw() {
       titleSong.pause();
     
       if (canDrawBg) {
-        africaBackground = loadImage("img/africa/bg-img-africa.jpg");
+        africaBackground = loadImage("img/bg-img-africa.jpg");
         image(africaBackground, 0, 0, width, height);
         canDrawBg = false;
       }
@@ -270,7 +270,7 @@ void setupAfricaLevel(int drumCount) {
   for (int i = 0; i < drumCount; i++) {
     int pick = (int)Math.floor(Math.random() * africanInstruments.length);
     String instrument = africanInstruments[pick];
-    drumset[i] = new Instrument(instrument, "img/africa/" + instrument + ".png", "SoundSamples/kick1.wav");
+    drumset[i] = new Instrument(instrument, "img/" + instrument + ".png", "SoundSamples/kick1.wav");
   }
   
   

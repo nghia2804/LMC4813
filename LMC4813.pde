@@ -53,6 +53,7 @@ FSM fsm = new FSM();
 GameState gameState = fsm.currentState();
 
 boolean canDrawBg;
+boolean hasDrawnDjembeScreen;
 
 // Background images
 PImage titleScreen;
@@ -67,6 +68,7 @@ PImage indiaBackground;
 PImage indiaSelectTutorial;
 PImage indiaSelectFreeplay;
 PImage djembeLevelBackground;
+PImage djembeIntroImg;
 
 
 color bgBlue = color(171, 245, 254);
@@ -85,6 +87,7 @@ void setup() {
   smooth();
   
   canDrawBg = true;
+  hasDrawnDjembeScreen = false;
   
   
   time = 0;
@@ -496,7 +499,28 @@ void keyPressed() {
     case 4: // mode setup state
       
       if (key == ENTER) {
-        
+        if (selectedCulture == "india") {
+          if (selectedMode == "tutorial") {
+            println("Sorry... this tutorial level is not implemented yet!");  
+          } else {
+            
+          }
+        } else { // selected culture africa
+          if (selectedMode == "tutorial") {
+            if (!hasDrawnDjembeScreen) {
+              djembeIntroImg = loadImage("img/screen-djembe.jpg");
+              image(djembeIntroImg, 0, 0, width, height);
+              canDrawBg = false;
+              hasDrawnDjembeScreen = true;
+            } else {
+              gameState = fsm.nextState(); 
+              canDrawBg = true;
+            }
+            
+          } else {
+            
+          }
+        }
       } else if (key == BACKSPACE) {
         gameState = fsm.prevState();
         canDrawBg = true;  
@@ -562,6 +586,11 @@ void mouseClicked() {
   }
   
    
+}
+
+void delay(int delay) {
+  int time = millis();
+  while(millis() - time <= delay);
 }
 
 void stop() {

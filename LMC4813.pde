@@ -289,6 +289,14 @@ void draw() {
     
     break; // end mode setup state
     
+    case 6: // djembe tutorial level state 
+      if (canDrawBg) {
+        djembeLevelBackground = loadImage("img/bg-img-djembe.jpg");
+        image(djembeLevelBackground, 0, 0, width, height); 
+        canDrawBg = false;
+      }
+    break; // end djembe tutorial level state
+    
     default:
     break;
   }
@@ -330,6 +338,11 @@ void setupAfricaLevel(int drumCount) {
   r.initializeRhythm();
   r.drawRhythm(); 
   
+}
+
+
+void setupDjembeLevel(int drumCount) {
+   
 }
 
 
@@ -408,12 +421,15 @@ void keyPressed() {
             canDrawBg = true;
           } else if (key == ENTER) {
             
-            if (numberOfInstruments >= 1 && numberOfInstruments <= 6) {
+            if (selectedMode == "freeplay" && numberOfInstruments >= 1 && numberOfInstruments <= 6) {
               gameState = fsm.nextState();
               canDrawBg = true;
               
               setupAfricaLevel(numberOfInstruments);
               
+            } else if (selectedMode == "tutorial" && numberOfInstruments >= 3 && numberOfInstruments <= 6) {
+              gameState = fsm.goToDjembeLevel();
+              canDrawBg = true;
             }
             
           } else if (key == CODED) {
@@ -541,6 +557,14 @@ void keyPressed() {
       }
       
     break; // end mode setup state
+    
+    case 6: // djembe tutorial level state
+      if (key == BACKSPACE) {
+        gameState = fsm.prevState();
+        canDrawBg = true;
+      }
+    break; // end djembe tutorial level state
+    
     default:
     break;
   }

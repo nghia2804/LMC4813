@@ -13,6 +13,7 @@ public class FSM {
   private GameState levelSetupState;
   private GameState africaLevelState;
   private GameState indiaLevelState;
+  private GameState djembeLevelState;
   private GameState currentState;
   
   public FSM() {
@@ -22,6 +23,7 @@ public class FSM {
     this.africaLevelState = new GameState("africalevel", 3);
     this.modeSetupState = new GameState("modesetup", 4);
     this.indiaLevelState = new GameState("indialevel", 5);
+    this.djembeLevelState = new GameState("djembelevel", 6);
     this.currentState = this.startState;
     
     this.startState.setNext(worldMapState);
@@ -41,10 +43,31 @@ public class FSM {
     
     this.indiaLevelState.setNext(worldMapState);
     this.indiaLevelState.setPrev(levelSetupState);
+    
+    this.djembeLevelState.setNext(worldMapState);
+    this.djembeLevelState.setPrev(levelSetupState);
   }
   
   public GameState currentState() {
     return this.currentState; 
+  }
+  
+  public GameState goToAfrica() {
+    this.currentState = africaLevelState;
+    println("moved to " + this.currentState);
+    return this.currentState;
+  }
+  
+  public GameState goToIndia() {
+    this.currentState = indiaLevelState;
+    println("moved to " + this.currentState);
+    return this.currentState;
+  }
+  
+  public GameState goToDjembeLevel() {
+    this.currentState = djembeLevelState;
+    println("moved to " + this.currentState);
+    return this.currentState;
   }
   
   public GameState nextState() {

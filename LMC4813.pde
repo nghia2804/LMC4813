@@ -289,6 +289,44 @@ void draw() {
     
     break; // end mode setup state
     
+    case 5: // india level state
+      if (canDrawBg) {
+        println("drawing india bg");
+        indiaBackground = loadImage("img/bg-img-south-asia.jpg");
+        image(indiaBackground, 0, 0, width, height);
+        canDrawBg = false;
+      }
+
+      
+      // draw the drums: if a draw has just been struck
+      // then fill it with color as visual feedback for the user
+      //viz.drawMark(time);
+      //viz.drawGid();
+      
+      viz.drawViz(drumset, time);
+      
+      // Makeymakey draw
+      makey.drawMakey();
+      
+      //b.detect(song.mix);
+      
+      strokeWeight(32);
+      if (b.isOnset()) {
+        stroke(#000000);
+        beatMillis = millis();
+      } else {
+        stroke(#FFFFFF);
+      }
+      line(0, 0, width, 0);
+      line(0, 0, 0, height);
+      line(width, 0, width, height);
+      line(0, height, width, height);
+      strokeWeight(1);
+      
+      
+      time++;
+    break; // end of india level state
+    
     case 6: // djembe tutorial level state 
       if (canDrawBg) {
         djembeLevelBackground = loadImage("img/bg-img-djembe.jpg");
@@ -324,6 +362,40 @@ void setupAfricaLevel(int drumCount) {
   for (int i = 0; i < drumCount; i++) {
     int pick = (int)Math.floor(Math.random() * africanInstruments.length);
     String instrument = africanInstruments[pick];
+    drumset[i] = new Instrument(instrument, "img/" + instrument + ".png", "sound/" + instrument + ".wav");
+  }
+  
+  
+
+  //Initialize Instrument Audio & Graphics
+  for (int i = 0; i < drumCount; i++) {
+    //initialize sound
+    drumset[i].setAudio();
+
+  }
+  r.initializeRhythm();
+  r.drawRhythm(); 
+  
+}
+
+void setupIndianLevel(int drumCount) {
+  
+  drumset = new Instrument[drumCount];
+  
+  // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
+  b = new BeatDetect();
+  
+  //Initialize rhythm with tempo (beats/minute)
+  r = new Rhythm(60);
+  
+  //
+  viz = new GraphicViz(60,400);
+  viz.initializeViz();
+
+  //Initialize Instruments
+  for (int i = 0; i < drumCount; i++) {
+    int pick = (int)Math.floor(Math.random() * indianInstruments.length);
+    String instrument = indianInstruments[pick];
     drumset[i] = new Instrument(instrument, "img/" + instrument + ".png", "sound/" + instrument + ".wav");
   }
   
@@ -423,7 +495,13 @@ void keyPressed() {
               gameState = fsm.nextState();
               canDrawBg = true;
               
-              setupAfricaLevel(numberOfInstruments);
+              if (selectedCulture == "africa") {
+                setupAfricaLevel(numberOfInstruments);
+              } else {
+                setupIndianLevel(numberOfInstruments); 
+              }
+              
+              canDrawBg = true;
               
             } else if (selectedMode == "tutorial" && selectedCulture == "africa" && numberOfInstruments >= 3 && numberOfInstruments <= 6) {
               gameState = fsm.goToDjembeLevel();
@@ -516,8 +594,9 @@ void keyPressed() {
         if (selectedCulture == "india") {
           if (selectedMode == "tutorial") {
             println("Sorry... this tutorial level is not implemented yet!");  
-          } else {
-            
+          } else { // freeplay mode india
+            gameState = fsm.nextState();
+            canDrawBg = true;
           }
         } else { // selected culture africa
           if (selectedMode == "tutorial") {

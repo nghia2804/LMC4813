@@ -324,7 +324,7 @@ void setupAfricaLevel(int drumCount) {
   for (int i = 0; i < drumCount; i++) {
     int pick = (int)Math.floor(Math.random() * africanInstruments.length);
     String instrument = africanInstruments[pick];
-    drumset[i] = new Instrument(instrument, "img/" + instrument + ".png", "SoundSamples/kick1.wav");
+    drumset[i] = new Instrument(instrument, "img/" + instrument + ".png", "sound/" + instrument + ".wav");
   }
   
   
@@ -348,6 +348,10 @@ void setupDjembeLevel(int drumCount) {
 
 void keyPressed() {
   
+  if (key == BACKSPACE) {
+    gameState = fsm.prevState();
+    canDrawBg = true;  
+  } 
   
   switch (gameState.getVal()) {
     case 0: // start state
@@ -387,9 +391,6 @@ void keyPressed() {
             println(selectedCulture + " was selected");
             gameState = fsm.nextState();
             canDrawBg = true;
-          } else if (key == BACKSPACE) {
-            gameState = fsm.prevState();
-            canDrawBg = true;
           } else if (key == CODED) {
             switch (keyCode) {
               case UP:
@@ -416,9 +417,6 @@ void keyPressed() {
     
           if (key == ' ') {
             makeySpaceEnabled = !makeySpaceEnabled;
-          } else if (key == BACKSPACE) {
-            gameState = fsm.prevState();
-            canDrawBg = true;
           } else if (key == ENTER) {
             
             if (selectedMode == "freeplay" && numberOfInstruments >= 1 && numberOfInstruments <= 6) {
@@ -538,9 +536,6 @@ void keyPressed() {
             canDrawBg = true;
           }
         }
-      } else if (key == BACKSPACE) {
-        gameState = fsm.prevState();
-        canDrawBg = true;  
       } else {
         switch (keyCode) {
           case UP:
@@ -560,10 +555,7 @@ void keyPressed() {
     break; // end mode setup state
     
     case 6: // djembe tutorial level state
-      if (key == BACKSPACE) {
-        gameState = fsm.prevState();
-        canDrawBg = true;
-      }
+      
     break; // end djembe tutorial level state
     
     default:

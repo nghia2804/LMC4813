@@ -427,7 +427,7 @@ void keyPressed() {
               
               setupAfricaLevel(numberOfInstruments);
               
-            } else if (selectedMode == "tutorial" && numberOfInstruments >= 3 && numberOfInstruments <= 6) {
+            } else if (selectedMode == "tutorial" && selectedCulture == "africa" && numberOfInstruments >= 3 && numberOfInstruments <= 6) {
               gameState = fsm.goToDjembeLevel();
               canDrawBg = true;
             }
@@ -533,8 +533,9 @@ void keyPressed() {
               canDrawBg = true;
             }
             
-          } else {
-            
+          } else { // freeplay mode africa
+            gameState = fsm.nextState();
+            canDrawBg = true;
           }
         }
       } else if (key == BACKSPACE) {

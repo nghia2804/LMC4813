@@ -27,9 +27,9 @@ int time;
 public static final int MAX_INSTRUMENTS = 6;
 int numberOfInstruments = 0;
 String[] africanInstruments = {"axatse", "balaphone", "bougarabou", "caxixi", "djembe",
-"djun-djun", "embaire", "ewe-drum", "gankogui", "sabar-drum", "slit-drum", "talking-drum",
+"djun-djun", "embaire", "gankogui", "sabar-drum", "slit-drum", "talking-drum",
 "udu-drum"};
-String[] indianInstruments = {"dafli-drum", "dholak-drum", "ghatam-drum", "jaltarang",
+String[] indianInstruments = {"dholak-drum", "jaltarang",
 "kanjira", "khartal", "morsing", "tabla"};
 
 //Array of Instruments
@@ -61,11 +61,19 @@ PImage worldMapIndia;
 PImage levelSetupBg;
 PImage numOne, numTwo, numThree, numFour, numFive, numSix;
 PImage africaBackground;
+PImage africaSelectTutorial;
+PImage africaSelectFreeplay;
+PImage indiaBackground;
+PImage indiaSelectTutorial;
+PImage indiaSelectFreeplay;
+PImage djembeLevelBackground;
+
 
 color bgBlue = color(171, 245, 254);
 
 // Helper vars
 String selectedCulture;
+String selectedMode;
 
 // Point
 int point = 0;
@@ -82,7 +90,6 @@ void setup() {
   time = 0;
   
   titleSong = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
-  titleSong.loop();
   
   africaBgMusic = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
   
@@ -94,17 +101,15 @@ void draw() {
 
   switch (gameState.getVal()) {
     case 0: // start state
-      titleSong.play();
       
       if (canDrawBg) {
-        titleScreen = loadImage("img/title-screen.jpg");
+        titleScreen = loadImage("img/title-screen-new.jpg");
         image(titleScreen, 0, 0, width, height);
         canDrawBg = false;
       }
       
     break; // end start state 
     case 1: // worldmap state
-      titleSong.play();
       
       if (selectedCulture == "india") {
         if (canDrawBg) {
@@ -123,7 +128,6 @@ void draw() {
       
     break; // end worldmap state
     case 2: // level setup state
-      titleSong.play();
       
       if (canDrawBg) {
         levelSetupBg = loadImage("img/level-setup-screen.jpg");
@@ -201,7 +205,6 @@ void draw() {
     break; // end level setup state
     
     case 3: // africa level state
-      titleSong.pause();
     
       if (canDrawBg) {
         africaBackground = loadImage("img/bg-img-africa.jpg");
@@ -242,6 +245,46 @@ void draw() {
       time++;
       
     break; // end africa level state
+    
+    case 4: // mode setup state
+    
+      if (selectedCulture == "india") { // india setup
+        
+        if (selectedMode == "tutorial") {
+          if (canDrawBg) {
+            indiaSelectTutorial = loadImage("img/bg-img-south-asia-tutorial-sel.jpg");
+            image(indiaSelectTutorial, 0, 0, width, height);
+            canDrawBg = false;
+          }
+        } else { // selected mode is 'freeplay'
+          if (canDrawBg) {
+            indiaSelectFreeplay = loadImage("img/bg-img-south-asia-freeplay-sel.jpg");
+            image(indiaSelectFreeplay, 0, 0, width, height);
+            canDrawBg = false;
+          }
+        }
+        
+      } else { // africa setup
+        
+        if (selectedMode == "tutorial") {
+          if (canDrawBg) {
+            africaSelectTutorial = loadImage("img/bg-img-africa-tutorial-sel.jpg");
+            image(africaSelectTutorial, 0, 0, width, height);
+            canDrawBg = false;
+          }
+        } else {
+          if (canDrawBg) {
+            africaSelectFreeplay = loadImage("img/bg-img-africa-freeplay-sel.jpg");
+            image(africaSelectFreeplay, 0, 0, width, height);
+            canDrawBg = false;
+          }
+        }
+        
+        
+        
+      }
+    
+    break; // end mode setup state
     
     default:
     break;
@@ -299,7 +342,7 @@ void keyPressed() {
         gameState = fsm.nextState();
         canDrawBg = true;
         selectedCulture = "africa";
-        africaBgMusic.play();
+        selectedMode = "tutorial";
       } else if (key == CODED) {
         switch (keyCode) {
           case UP:
@@ -450,6 +493,30 @@ void keyPressed() {
           }
     
     break; // end africa level state
+    case 4: // mode setup state
+      
+      if (key == ENTER) {
+        
+      } else if (key == BACKSPACE) {
+        gameState = fsm.prevState();
+        canDrawBg = true;  
+      } else {
+        switch (keyCode) {
+          case UP:
+            selectedMode = "tutorial";
+            canDrawBg = true;
+          break;
+          case DOWN:
+            selectedMode = "freeplay";
+            canDrawBg = true;
+          break;
+          default: 
+          
+          break;
+        }
+      }
+      
+    break; // end mode setup state
     default:
     break;
   }

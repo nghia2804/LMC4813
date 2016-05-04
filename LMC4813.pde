@@ -90,7 +90,7 @@ Boolean isBgDrawn = false;
 ScoreViz scoreBar;
 
 int isFasterScreen = -1;
-String songPath;
+String songPath = "";
 
 void setup() {  
   size(800, 600);
@@ -107,8 +107,8 @@ void setup() {
   bgMusic = titleSong;
   bgMusic.play();
   
-  africaBgMusic = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
-  indiaBgMusic = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
+  africaBgMusic = minim.loadFile("sound/new_tutorial_fast.wav", 2048);
+  indiaBgMusic = minim.loadFile("sound/bg-music-freeplay-south-asia.wav", 2048);
   
 
   
@@ -316,6 +316,11 @@ void draw() {
         image(indiaBackground, 0, 0, width, height);
         canDrawBg = false;
       }
+      
+      color concrete = color(210, 197, 181);
+      fill(concrete);
+      stroke(concrete);
+      rect(0, height - 200, width, 200);
       
       viz.drawViz(drumset, time);
       
@@ -564,6 +569,12 @@ void keyPressed() {
   if (key == BACKSPACE) {
     gameState = fsm.prevState();
     canDrawBg = true;  
+    
+    if (songPath.equals("sound/new_tutorial_slowspeed.mp3") || songPath.equals("sound/new_tutorial_mediumspeed.mp3")) {
+      song.pause();
+    }
+    
+    bgMusic.play();
   } 
   
   switch (gameState.getVal()) {
@@ -633,12 +644,14 @@ void keyPressed() {
           } else if (key == ENTER) {
             
             if (selectedMode == "freeplay" && numberOfInstruments >= 1 && numberOfInstruments <= 6) {
-              gameState = fsm.nextState();
+              //gameState = fsm.nextState();
               canDrawBg = true;
               
               if (selectedCulture == "africa") {
+                gameState = fsm.goToAfrica();
                 setupAfricaLevel(numberOfInstruments);
               } else {
+                gameState = fsm.goToIndia();
                 setupIndianLevel(numberOfInstruments); 
               }
               
@@ -775,6 +788,49 @@ void keyPressed() {
       }
       
     break; // end mode setup state
+    
+    case 5: // india level state 
+      if (key == ' ') {
+        
+            makey.redrawSpaceBtn(color(0, 255, 0));
+            
+          } else if (key == CODED) {
+            switch (keyCode) {
+              case UP:
+                makey.redrawUpBtn(color(0, 255, 0));
+                drumset[0].isStruck = true;
+                drumset[0].drumAudio.play(0);
+                getPoint();
+              break;
+              case DOWN:
+                if (numberOfInstruments >= 2) {
+                  makey.redrawDownBtn(color(0, 255, 0));
+                  drumset[1].isStruck = true;
+                  drumset[1].drumAudio.play(0);
+                  getPoint();
+                }
+              break;
+              case LEFT:
+                if (numberOfInstruments >= 3) {
+                  makey.redrawLeftBtn(color(0, 255, 0));
+                  drumset[2].isStruck = true;
+                  drumset[2].drumAudio.play(0);
+                  getPoint();
+                }
+              break;
+              case RIGHT:
+                if (numberOfInstruments >= 4) {
+                  makey.redrawRightBtn(color(0, 255, 0));
+                  drumset[3].isStruck = true;
+                  drumset[3].drumAudio.play(0);
+                  getPoint();
+                }
+              break;
+              default:
+              break;
+            }
+          }
+    break;
     
     case 6: // djembe tutorial level state
       if (key == ENTER && isFasterScreen == 4) {

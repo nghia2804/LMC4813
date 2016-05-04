@@ -15,8 +15,11 @@ import ddf.minim.analysis.*;
 import ddf.minim.analysis.*;
 
 Minim minim = new Minim(this);
+AudioPlayer bgMusic;
 AudioPlayer africaBgMusic;
+AudioPlayer indiaBgMusic;
 AudioPlayer titleSong;
+AudioPlayer song;
 Boolean isAfricaSongMute = false;
 BeatDetect b;
 
@@ -35,11 +38,14 @@ String[] indianInstruments = {"dholak-drum", "jaltarang",
 //Array of Instruments
 Instrument[] drumset;
 
+//Array of Positions in Tutorial Mode
+int [][] positionsArray;
+
 // rhythm variables-----------
 Rhythm r;
 
 //Graphic Viz-----------------
-GraphicViz viz;
+InputViz viz;
 
 //Makeymakey variables--------
 //MakeyMakey(int xPosition, int yPosition, int screenWidth)
@@ -93,8 +99,13 @@ void setup() {
   time = 0;
   
   titleSong = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
+  bgMusic = titleSong;
+  bgMusic.play();
   
   africaBgMusic = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
+  indiaBgMusic = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
+  
+
   
   // ...
   minim = new Minim(this);
@@ -207,10 +218,13 @@ void draw() {
       
     break; // end level setup state
     
-    case 3: // africa level state
-    
+    case 3: // africa level state - freemode
+      
       if (canDrawBg) {
+        bgMusic.pause(); // StopBgMusic
+        System.out.println("BG Music Stoped");
         africaBackground = loadImage("img/bg-img-africa.jpg");
+        System.out.print("Draw Africa Background");
         image(africaBackground, 0, 0, width, height);
         canDrawBg = false;
       }
@@ -218,11 +232,6 @@ void draw() {
       fill(dirt);
       stroke(dirt);
       rect(0, height - 200, width, 200);
-      
-      // draw the drums: if a draw has just been struck
-      // then fill it with color as visual feedback for the user
-      //viz.drawMark(time);
-      //viz.drawGid();
       
       viz.drawViz(drumset, time);
       
@@ -252,9 +261,14 @@ void draw() {
     case 4: // mode setup state
     
       if (selectedCulture == "india") { // india setup
+        bgMusic.pause(); // Stop bgMusic
+        bgMusic = indiaBgMusic;
+        bgMusic.play();
+        
         
         if (selectedMode == "tutorial") {
           if (canDrawBg) {
+            
             indiaSelectTutorial = loadImage("img/bg-img-south-asia-tutorial-sel.jpg");
             image(indiaSelectTutorial, 0, 0, width, height);
             canDrawBg = false;
@@ -268,7 +282,9 @@ void draw() {
         }
         
       } else { // africa setup
-        
+        bgMusic.pause(); // Stop bgMusic
+        bgMusic = africaBgMusic;
+        bgMusic.play();
         if (selectedMode == "tutorial") {
           if (canDrawBg) {
             africaSelectTutorial = loadImage("img/bg-img-africa-tutorial-sel.jpg");
@@ -282,26 +298,19 @@ void draw() {
             canDrawBg = false;
           }
         }
-        
-        
-        
       }
     
     break; // end mode setup state
     
-    case 5: // india level state
+    case 5: // india level state - freemode
+    
       if (canDrawBg) {
+        bgMusic.pause(); // Stop bgMusic
         println("drawing india bg");
         indiaBackground = loadImage("img/bg-img-south-asia.jpg");
         image(indiaBackground, 0, 0, width, height);
         canDrawBg = false;
       }
-
-      
-      // draw the drums: if a draw has just been struck
-      // then fill it with color as visual feedback for the user
-      //viz.drawMark(time);
-      //viz.drawGid();
       
       viz.drawViz(drumset, time);
       
@@ -328,19 +337,50 @@ void draw() {
     break; // end of india level state
     
     case 6: // djembe tutorial level state 
+      bgMusic.pause(); // Stop bgMusic
       if (canDrawBg) {
+        song = minim.loadFile("sound/new_tutorial_slowspeed.mp3");
+        song.play();
         djembeLevelBackground = loadImage("img/bg-img-djembe.jpg");
         image(djembeLevelBackground, 0, 0, width, height); 
         canDrawBg = false;
       }
+      
+      color colDjembe = color(221, 205, 177);
+      fill(colDjembe);
+      stroke(colDjembe);
+      rect(300, 275, 300, 150);
+      
+      
+      viz.drawTutorialMode(drumset, positionsArray);
+      
+       // Makeymakey draw
+      makey.drawMakey();
+      
+      b.detect(song.mix);
+      
+      strokeWeight(32);
+      if (b.isOnset()) {
+        stroke(#000000);
+        beatMillis = millis();
+      } else {
+        stroke(#FFFFFF);
+      }
+      line(0, 0, width, 0);
+      line(0, 0, 0, height);
+      line(width, 0, width, height);
+      line(0, height, width, height);
+      strokeWeight(1);
+      
+      
+      time++;
+      
+      
     break; // end djembe tutorial level state
     
     default:
     break;
   }
-  
-  
-  
 }
 
   
@@ -355,7 +395,7 @@ void setupAfricaLevel(int drumCount) {
   r = new Rhythm(60);
   
   //
-  viz = new GraphicViz(60,400);
+  viz = new InputViz(60,400);
   viz.initializeViz();
 
   //Initialize Instruments
@@ -389,7 +429,7 @@ void setupIndianLevel(int drumCount) {
   r = new Rhythm(60);
   
   //
-  viz = new GraphicViz(60,400);
+  viz = new InputViz(60,400);
   viz.initializeViz();
 
   //Initialize Instruments
@@ -414,6 +454,34 @@ void setupIndianLevel(int drumCount) {
 
 
 void setupDjembeLevel(int drumCount) {
+  
+  drumset = new Instrument[drumCount];
+  
+  // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
+  b = new BeatDetect();
+  
+  //Initialize rhythm with tempo (beats/minute)
+  r = new Rhythm(60);
+  
+  int[][] positionsDjembe = {{315,300},{415,300},{515,300}};
+  positionsArray = positionsDjembe;
+  //
+  viz = new InputViz(60,400);
+  viz.initializeViz();
+  
+  //Initialize Instruments
+  drumset[0] = new Instrument("Djembe Bass", "img/djembe.png", "sound/djembe1.wav");
+  drumset[1] = new Instrument("Djembe Tone", "img/djembe.png", "sound/djembe2.wav");
+  drumset[2] = new Instrument("Djembe Slap", "img/djembe.png", "sound/djembe3.wav");
+  
+  //Initialize Instrument Audio & Graphics
+  for (int i = 0; i < drumCount; i++) {
+    //initialize sound
+    drumset[i].setAudio();
+  }
+  
+  r.initializeRhythm();
+  r.drawRhythm(); 
    
 }
 
@@ -506,6 +574,8 @@ void keyPressed() {
             } else if (selectedMode == "tutorial" && selectedCulture == "africa" && numberOfInstruments >= 3 && numberOfInstruments <= 6) {
               gameState = fsm.goToDjembeLevel();
               canDrawBg = true;
+              
+              setupDjembeLevel(3);
             }
             
           } else if (key == CODED) {
@@ -634,7 +704,55 @@ void keyPressed() {
     break; // end mode setup state
     
     case 6: // djembe tutorial level state
-      
+      if (key == ' ') {
+        
+            makey.redrawSpaceBtn(color(0, 255, 0));
+            
+            if (isAfricaSongMute == false){ 
+              africaBgMusic.mute();
+              isAfricaSongMute= true;
+            } else { 
+              africaBgMusic.unmute();
+              isAfricaSongMute = false;
+            }
+            
+          } else if (key == CODED) {
+            switch (keyCode) {
+              case UP:
+                makey.redrawUpBtn(color(0, 255, 0)); /////////////////////////////
+                drumset[0].isStruck = true;
+                System.out.print(canDrawBg);
+                drumset[0].drumAudio.play(0);
+                getPoint();
+              break;
+              case DOWN:
+                if (numberOfInstruments >= 2) {
+                  makey.redrawDownBtn(color(0, 255, 0));
+                  drumset[1].isStruck = true;
+                  drumset[1].drumAudio.play(0);
+                  getPoint();
+                }
+              break;
+              case LEFT:
+                if (numberOfInstruments >= 3) {
+                  makey.redrawLeftBtn(color(0, 255, 0));
+                  drumset[2].isStruck = true;
+                  drumset[2].drumAudio.play(0);
+                  getPoint();
+                }
+              break;
+              case RIGHT:
+                if (numberOfInstruments >= 4) {
+                  makey.redrawRightBtn(color(0, 255, 0));
+                  //drumset[3].isStruck = true;
+                  //drumset[3].drumAudio.play(0);
+                  //getPoint();
+                }
+              break;
+              default:
+              break;
+            }
+          }
     break; // end djembe tutorial level state
     
     default:
@@ -645,8 +763,28 @@ void keyPressed() {
 }
 
 void getPoint(){
-  if ((millis() - beatMillis ) > 300) {
-    point = point + 10;
+  System.out.println("Hit:"+ millis());
+  System.out.println("Target"+ beatMillis);
+  if (Math.abs((millis() - beatMillis )) < 300) {
+    System.out.println("You hit it!");
+    for (int i = 0; i < 4 ; i++){
+      stroke(#ABABAB);
+      strokeWeight(20);
+      line(15, 15, width-15, 15);
+      line(15, 15, 15, height-15);
+      line(width-15, 15, width-15, height-15);
+      line(-15, height-15, width-15, height-15);
+      strokeWeight(1);
+      if (i == 3){
+      stroke(#FFFFFF);
+      strokeWeight(20);
+      line(15, 15, width-15, 15);
+      line(15, 15, 15, height-15);
+      line(width-15, 15, width-15, height-15);
+      line(-15, height-15, width-15, height-15);
+      strokeWeight(1);
+      }
+    }
   }
 }
 
@@ -694,6 +832,7 @@ void stop() {
   for (int i = 0; i < numberOfInstruments; i++) {
     drumset[i].drumAudio.close();
   }
+  bgMusic.close();
   minim.stop();
   super.stop();
 }

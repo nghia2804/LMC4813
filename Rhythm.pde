@@ -47,16 +47,7 @@ class Rhythm{
     beat.detect(player.mix);
     int bsize = player.bufferSize();  //define buffersize as an integer
     if (beat.isKick()){
-      
-    ////Displaying word.   
-    //int kickSize = 60;
-    //float x1 = (100)*cos(28*PI/bsize);
-    //float y1 = (100)*sin(28*PI/bsize);
-    //fill(#F8FFCC);
-    //f = createFont("OriyaMN-48", kickSize);
-    //textSize(kickSize);
-    //textFont(f);
-    //text("Kick", x1, y1);
+     
     }
   }
 }

@@ -27,6 +27,7 @@ class Instrument {
   
   void setAudio(){
     this.drumAudio = minim.loadSnippet(this.soundLocation);
+    System.out.println("Set audio" + this.name); //<>//
   }
   
   void drawInstrument(int xPos, int yPos, int w, int h) {

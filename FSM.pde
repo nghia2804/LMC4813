@@ -70,6 +70,12 @@ public class FSM {
     return this.currentState;
   }
   
+  public GameState goToWorldMap(){
+    this.currentState = worldMapState;
+    println("moved to " + this.currentState);
+    return this.currentState;
+  }
+  
   public GameState nextState() {
     this.currentState = this.currentState.getNext();
     println("moved to " + this.currentState);

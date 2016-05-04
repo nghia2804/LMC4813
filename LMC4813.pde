@@ -87,6 +87,10 @@ String selectedMode;
 int point = 0;
 int beatMillis = 0;
 Boolean isBgDrawn = false;
+ScoreViz scoreBar;
+
+int isFasterScreen = -1;
+String songPath;
 
 void setup() {  
   size(800, 600);
@@ -97,6 +101,7 @@ void setup() {
   
   
   time = 0;
+  scoreBar = new ScoreViz();
   
   titleSong = minim.loadFile("./SoundSamples/title-music.mp3", 2048);
   bgMusic = titleSong;
@@ -339,17 +344,85 @@ void draw() {
     case 6: // djembe tutorial level state 
       bgMusic.pause(); // Stop bgMusic
       if (canDrawBg) {
-        song = minim.loadFile("sound/new_tutorial_slowspeed.mp3");
+        songPath = "sound/new_tutorial_slowspeed.mp3";
+        song = minim.loadFile(songPath);
         song.play();
         djembeLevelBackground = loadImage("img/bg-img-djembe.jpg");
         image(djembeLevelBackground, 0, 0, width, height); 
         canDrawBg = false;
       }
+      scoreBar.drawViz();
       
+      
+      if (song.isPlaying() == false) {
+        
+        // check if user win
+        if (scoreBar.getValue() >= 20 && isFasterScreen == -1)
+        {
+          if (songPath.equals("sound/new_tutorial_mediumspeed.mp3")) {
+            djembeLevelBackground = loadImage("img/bg-img-djembe-finish.jpg");
+            image(djembeLevelBackground, 0, 0, width, height); 
+            isFasterScreen = 5;
+          } else {
+            
+            djembeLevelBackground = loadImage("img/bg-img-djembe-faster.jpg");
+            image(djembeLevelBackground, 0, 0, width, height); 
+            isFasterScreen = 3;
+          }
+          
+        } else if (scoreBar.getValue() < 20 && isFasterScreen == -1) {
+          djembeLevelBackground = loadImage("img/bg-img-djembe-tryagain.jpg");
+          image(djembeLevelBackground, 0, 0, width, height); 
+          isFasterScreen = 4;
+          System.out.println("Failed");
+        }
+        
+        if (isFasterScreen == 0 ){  
+          delay(1000);
+          djembeLevelBackground = loadImage("img/bg-img-djembe.jpg");
+          image(djembeLevelBackground, 0, 0, width, height);
+          songPath = "sound/new_tutorial_mediumspeed.mp3";
+          song = minim.loadFile(songPath);
+          song.play();
+          scoreBar = new ScoreViz();
+          isFasterScreen = isFasterScreen - 1;
+        }
+        
+        if (isFasterScreen == 1 ){  
+          delay(1000);
+          numThree = loadImage("img/number-01.png");
+          image(numThree, 350, 450, 100, 100);
+          isFasterScreen = isFasterScreen - 1;
+        }
+        
+        if (isFasterScreen == 2 ){  
+          delay(1000);
+          numThree = loadImage("img/number-02.png");
+          image(numThree, 350, 450, 100, 100);
+          isFasterScreen = isFasterScreen - 1;
+        }
+        
+        if (isFasterScreen == 3 ){  
+          delay(1000);
+          numThree = loadImage("img/number-03.png");
+          image(numThree, 350, 450, 100, 100);
+          isFasterScreen = isFasterScreen - 1;
+        }
+        
+        if (isFasterScreen == 5){
+          delay(2000);
+          gameState = fsm.goToWorldMap();
+        }
+        
+       
+      }      
+      
+      if (isFasterScreen == -1 || isFasterScreen == 4) {
       color colDjembe = color(221, 205, 177);
       fill(colDjembe);
       stroke(colDjembe);
       rect(300, 275, 300, 150);
+      }
       
       
       viz.drawTutorialMode(drumset, positionsArray);
@@ -704,6 +777,15 @@ void keyPressed() {
     break; // end mode setup state
     
     case 6: // djembe tutorial level state
+      if (key == ENTER && isFasterScreen == 4) {
+        djembeLevelBackground = loadImage("img/bg-img-djembe.jpg");
+        image(djembeLevelBackground, 0, 0, width, height);
+        song = minim.loadFile(songPath);
+        song.play();
+        scoreBar = new ScoreViz();
+        isFasterScreen = -1;
+        System.out.println("Replay");
+      }
       if (key == ' ') {
         
             makey.redrawSpaceBtn(color(0, 255, 0));
@@ -767,26 +849,27 @@ void getPoint(){
   System.out.println("Target"+ beatMillis);
   if (Math.abs((millis() - beatMillis )) < 300) {
     System.out.println("You hit it!");
-    for (int i = 0; i < 4 ; i++){
-      stroke(#ABABAB);
-      strokeWeight(20);
-      line(15, 15, width-15, 15);
-      line(15, 15, 15, height-15);
-      line(width-15, 15, width-15, height-15);
-      line(-15, height-15, width-15, height-15);
-      strokeWeight(1);
-      if (i == 3){
-      stroke(#FFFFFF);
-      strokeWeight(20);
-      line(15, 15, width-15, 15);
-      line(15, 15, 15, height-15);
-      line(width-15, 15, width-15, height-15);
-      line(-15, height-15, width-15, height-15);
-      strokeWeight(1);
-      }
-    }
+    scoreBar.increaseValue();
+    //for (int i = 0; i < 4 ; i++){
+    //  stroke(#ABABAB);
+    //  strokeWeight(20);
+    //  line(15, 15, width-15, 15);
+    //  line(15, 15, 15, height-15);
+    //  line(width-15, 15, width-15, height-15);
+    //  line(-15, height-15, width-15, height-15);
+    //  strokeWeight(1);
+    //  if (i == 3){
+    //  stroke(#FFFFFF);
+    //  strokeWeight(20);
+    //  line(15, 15, width-15, 15);
+    //  line(15, 15, 15, height-15);
+    //  line(width-15, 15, width-15, height-15);
+    //  line(-15, height-15, width-15, height-15);
+    //  strokeWeight(1);
+    //}
   }
 }
+
 
 void mouseClicked() {
   
